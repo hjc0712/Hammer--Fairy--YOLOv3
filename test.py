@@ -72,6 +72,7 @@ if __name__ == "__main__":
     print(opt)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
 
     data_config = parse_data_config(opt.data_config)
     valid_path = data_config["valid"]

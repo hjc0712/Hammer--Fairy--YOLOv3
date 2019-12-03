@@ -14,6 +14,7 @@ import sys
 import time
 import datetime
 import argparse
+import numpy
 
 import torch
 from torch.utils.data import DataLoader
@@ -42,9 +43,10 @@ if __name__ == "__main__":
     logger = Logger("logs")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
 
     os.makedirs("output", exist_ok=True)
-    os.makedirs("checkpoints", exist_ok=True)
+    os.makedirs("checkpoints_voc", exist_ok=True)
 
     # Get data configuration
     data_config = parse_data_config(opt.data_config)
@@ -57,9 +59,11 @@ if __name__ == "__main__":
     model.apply(weights_init_normal)
 
     # If specified we start from checkpoint
+    curEpo = -1;
     if opt.pretrained_weights:
         if opt.pretrained_weights.endswith(".pth"):
             model.load_state_dict(torch.load(opt.pretrained_weights))
+            curEpo = int(opt.pretrained_weights[-5])
         else:
             model.load_darknet_weights(opt.pretrained_weights)
 
@@ -93,7 +97,7 @@ if __name__ == "__main__":
         "conf_noobj",
     ]
 
-    for epoch in range(opt.epochs):
+    for epoch in range(curEpo+1, opt.epochs):
         model.train()
         start_time = time.time()
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
@@ -143,9 +147,13 @@ if __name__ == "__main__":
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
             log_str += f"\n---- ETA {time_left}"
 
-            print(log_str)
+            if batch_i % 100 == 0:
+                print(log_str)
 
             model.seen += imgs.size(0)
+
+        if epoch % opt.checkpoint_interval == 0:
+            torch.save(model.state_dict(), f"checkpoints_voc/yolov3_ckpt_%d.pth" % epoch)
 
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
@@ -165,8 +173,16 @@ if __name__ == "__main__":
                 ("val_mAP", AP.mean()),
                 ("val_f1", f1.mean()),
             ]
+            
             logger.list_of_scalars_summary(evaluation_metrics, epoch)
-
+            file2 = open("resultlog.txt","a") 
+            file2.write(str(epoch)+'\n')
+            for item in evaluation_metrics:
+                file2.write(item[0]+'\n')
+                file2.writelines(numpy.array2string(item[1])+'\n')
+            file2.writelines('-------------\n')
+            
+            
             # Print class APs and mAP
             ap_table = [["Index", "Class name", "AP"]]
             for i, c in enumerate(ap_class):
@@ -174,5 +190,4 @@ if __name__ == "__main__":
             print(AsciiTable(ap_table).table)
             print(f"---- mAP {AP.mean()}")
 
-        if epoch % opt.checkpoint_interval == 0:
-            torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_%d.pth" % epoch)
+        
