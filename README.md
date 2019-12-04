@@ -1,6 +1,5 @@
 # Hammer--Fairy--YOLOv3
 The real time object detection project by hammer &amp; fairy team
-Hi there
 
 ## Preperations before running
 Before running the project, need to get the following steps done first.  
