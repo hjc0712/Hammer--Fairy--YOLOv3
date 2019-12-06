@@ -10,7 +10,7 @@ Before running the project, need to get the following steps done first.
 ``` 
 3) Trasformed VOC annotations into YOLOv3 supported labels, which is in syntax "label_idx x_center y_center width height". To convert the labels and generate manipast file at the same time, run "convert.py":
 ```python
-python3 convert.py --datasets VOC --img_path /datasets/ee285f-public/PascalVOC2012/JPEGImages/ --label /datasets/ee285f-public/PascalVOC2012/Annotations/ --convert_output_path data/custom/labels/ --img_type ".jpg" --manipast_path ./ --cls_list_file config/voc.txt
+python3 convert.py --datasets VOC --img_path data/custom/images --label /datasets/ee285f-public/PascalVOC2012/Annotations/ --convert_output_path data/custom/labels/ --img_type ".jpg" --manipast_path config/ --cls_list_file config/voc.txt
 ```
 4) Finally, check the following configrations and make sure everything's right.  
 a. custom.data
@@ -31,6 +31,6 @@ c. custom_train.txt & custom_test.txt & voc.txt are in the right directory and c
 
 5) Now we are ready to staring trainning & testing. run:
 ```python
-train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data --pretrained_weights checkpoints_voc/yolov3_ckpt_52.pth 2> /dev/null
+python train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data --pretrained_weights checkpoints_voc/yolov3_ckpt_52.pth 2> /dev/null
 ```  
-replace the checkpoint with the one we want to start. 
+replace the checkpoint with the one we want to start.
