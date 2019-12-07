@@ -1,4 +1,4 @@
 classes= 20
-train=config/custom_train.txt
-valid=config/custom_test.txt
+train=config/voc_train.txt
+valid=config/voc_test.txt
 names=config/voc.txt
