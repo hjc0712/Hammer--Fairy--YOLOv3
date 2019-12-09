@@ -34,3 +34,9 @@ c. custom_train.txt & custom_test.txt & voc.txt are in the right directory and c
 python train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data --pretrained_weights checkpoints_voc/yolov3_ckpt_52.pth 2> /dev/null
 ```  
 replace the checkpoint with the one we want to start.
+
+6) To run detection, run:
+```python
+python3 detect.py --image_folder data/samples/ --weights_path checkpoints_voc/yolov3_ckpt_290.pth
+```
+the checkpoint will be uploaded to the link:
