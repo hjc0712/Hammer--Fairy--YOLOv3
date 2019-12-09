@@ -59,12 +59,12 @@ def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", type=int, default=8, help="size of each image batch")
-    parser.add_argument("--model_def", type=str, default="config/yolov3.cfg", help="path to model definition file")
-    parser.add_argument("--data_config", type=str, default="config/coco.data", help="path to data config file")
+    parser.add_argument("--model_def", type=str, default="config/yolov3-custom.cfg", help="path to model definition file")
+    parser.add_argument("--data_config", type=str, default="config/custom.data", help="path to data config file")
     parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
-    parser.add_argument("--class_path", type=str, default="data/coco.names", help="path to class label file")
+    parser.add_argument("--class_path", type=str, default="data/voc.txt", help="path to class label file")
     parser.add_argument("--iou_thres", type=float, default=0.5, help="iou threshold required to qualify as detected")
-    parser.add_argument("--conf_thres", type=float, default=0.001, help="object confidence threshold")
+    parser.add_argument("--conf_thres", type=float, default=0.5, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.5, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
@@ -81,27 +81,42 @@ if __name__ == "__main__":
     # Initiate model
     model = Darknet(opt.model_def).to(device)
     
-    if opt.weights_path.endswith(".weights"):
-        # Load darknet weights
-        model.load_darknet_weights(opt.weights_path)
-    else:
-        # Load checkpoint weights
-        model.load_state_dict(torch.load(opt.weights_path))
+     
+    for epochs in range(4,64):
+        
+        checkpoint_num = epochs * 5
+        print(checkpoint_num)
+        checkpoint_file = "checkpoints_voc/yolov3_ckpt_%d.pth" % checkpoint_num
+            
+        model.load_state_dict(torch.load(checkpoint_file))
 
-    print("Compute mAP...")
+        print("Compute mAP...")
 
-    precision, recall, AP, f1, ap_class = evaluate(
-        model,
-        path=valid_path,
-        iou_thres=opt.iou_thres,
-        conf_thres=opt.conf_thres,
-        nms_thres=opt.nms_thres,
-        img_size=opt.img_size,
-        batch_size=8,
-    )
-
-    print("Average Precisions:")
-    for i, c in enumerate(ap_class):
-        print(f"+ Class '{c}' ({class_names[c]}) - AP: {AP[i]}")
-
-    print(f"mAP: {AP.mean()}")
+        precision, recall, AP, f1, ap_class = evaluate(
+            model,
+            path=valid_path,
+            iou_thres=opt.iou_thres,
+            conf_thres=opt.conf_thres,
+            nms_thres=opt.nms_thres,
+            img_size=opt.img_size,
+            batch_size=8,
+        )
+        
+        file2 = open("auto_Test_train.txt","a")
+        file2.write(str(checkpoint_num)+'\n')
+        
+        print("Average Precisions:")
+        for i, c in enumerate(ap_class):
+            print(f"+ Class '{c}' ({class_names[c]}) - AP: {AP[i]}")
+            print(f"+ Class '{c}' ({class_names[c]}) - pre: {precision[i]}")
+            file2.write(f"+ Class '{c}' ({class_names[c]}) - AP: {AP[i]}"+'\n')
+            
+        
+        print(f"mAP: {AP.mean()}")
+        file2.write(f"mAP: {AP.mean()}"+'\n')
+        file2.write(f"precision: {precision.mean()}"+'\n')
+        file2.write(f"recall: {recall.mean()}"+'\n')
+        file2.write(f"f1: {f1.mean()}"+'\n')
+        file2.write('-------------\n')
+        file2.close()
+    
