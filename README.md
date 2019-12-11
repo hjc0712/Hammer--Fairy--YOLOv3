@@ -35,8 +35,5 @@ python train.py --model_def config/yolov3-custom.cfg --data_config config/custom
 ```  
 replace the checkpoint with the one we want to start.
 
-6) To run detection, run:
-```python
-python3 detect.py --image_folder data/samples/ --weights_path checkpoints_voc/yolov3_ckpt_290.pth
-```
-the checkpoint will be uploaded to the link:
+## Demo Detection
+run detecttion demo, open "demo.ipynb" and run.
