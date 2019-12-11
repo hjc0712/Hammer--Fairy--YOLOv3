@@ -1,24 +1,26 @@
 # Hammer--Fairy--YOLOv3
 The real time object detection project by hammer &amp; fairy team
 
+## Requirements
+Python 3 (>= 3.7.0)
+
 ## Preperations before running
-Before running the project, need to get the following steps done first.  
-1) We are using the PASCAL VOC datasets provided on mldsp server. But we need to move data into certain folders, and change labels into YOLO syntax.
-2) Move the images of your dataset to data/custom/images/ , by running:  
+1. We are using the PASCAL VOC datasets provided on mldsp server. But we need to move data into certain folders, and change labels into YOLO syntax.
+2. Move the images of your dataset to data/custom/images/ , by running:  
 ```python
  cp /datasets/ee285f-public/PascalVOC2012/JPEGImages/* data/custom/images/
 ``` 
-3) Trasformed VOC annotations into YOLOv3 supported labels, which is in syntax "label_idx x_center y_center width height". To convert the labels and generate manipast file at the same time, run "convert.py":
+3. Trasformed VOC annotations into YOLOv3 supported labels, which is in syntax "label_idx x_center y_center width height".
 ```python
-python3 convert.py --datasets VOC --img_path data/custom/images --label /datasets/ee285f-public/PascalVOC2012/Annotations/ --convert_output_path data/custom/labels/ --img_type ".jpg" --manipast_path config/ --cls_list_file config/voc.txt
+python3 convert.py --datasets VOC --img_path data/custom/images/ --label /datasets/ee285f-public/PascalVOC2012/Annotations/ --convert_output_path data/custom/labels --img_type ".jpg" --cls_list_file data/custom/classes.names
 ```
-4) Finally, check the following configrations and make sure everything's right.  
+4. Finally, check the following configrations and make sure everything's right.  
 a. custom.data
 ```python
 classes= 20
-train=config/custom_train.txt
-valid=config/custom_test.txt
-names=config/voc.txt
+train=data/custom/train.txt
+valid=data/custom/valid.txt
+names=data/custom/classes.names
 ```  
 b. data/custom/images & data/custom/labels are in the right directory and contain the required information. Labels should be in this syntax:
 ```python
@@ -27,16 +29,20 @@ b. data/custom/images & data/custom/labels are in the right directory and contai
 11 0.332 0.829 0.06 0.149
 11 0.413 0.795 0.03 0.064
 ```
-c. custom_train.txt & custom_test.txt & voc.txt are in the right directory and contain the correct information.
+c. train.txt & valid.txt & classes.names are in the right directory and contain the correct information.
 
-5) Now we are ready to staring trainning & testing. run:
+## Training
+Now we are ready to staring trainning. run:
 ```python
-python train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data --pretrained_weights checkpoints_voc/yolov3_ckpt_52.pth 2> /dev/null
+python3 -W ignore train.py --pretrained_weights weights/darknet53.conv.74 --batch_size 2
 ```  
-replace the checkpoint with the one we want to start.
+replace the checkpoint with the one we want to start with.
 
-6) To run detection, run:
+## Testing
+To run test, for example, run a test on the model we trained:
 ```python
-python3 detect.py --image_folder data/samples/ --weights_path checkpoints_voc/yolov3_ckpt_290.pth
+python3 test.py --weights_path checkpoints/yolov3_ckpt_309.pth
 ```
-the checkpoint will be uploaded to the link:
+
+## Detection Demo
+To see how well our model works, open demo.ipynb as a jupyter notebook and run the first cell. You should see detections and related classification information for random images.
