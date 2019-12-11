@@ -15,21 +15,21 @@ Python 3 (>= 3.7.0)
 python3 convert.py --datasets VOC --img_path data/custom/images/ --label /datasets/ee285f-public/PascalVOC2012/Annotations/ --convert_output_path data/custom/labels --img_type ".jpg" --cls_list_file data/custom/classes.names
 ```
 4. Finally, check the following configrations and make sure everything's right.  
-* custom.data
-```python
-classes= 20
-train=data/custom/train.txt
-valid=data/custom/valid.txt
-names=data/custom/classes.names
-```  
-* data/custom/images & data/custom/labels are in the right directory and contain the required information. Labels should be in this syntax:
-```python
-12 0.502 0.625 0.076 0.168
-14 0.514 0.555 0.1 0.192
-11 0.332 0.829 0.06 0.149
-11 0.413 0.795 0.03 0.064
-```
-* train.txt & valid.txt & classes.names are in the right directory and contain the correct information.
+    * custom.data
+    ```python
+    classes= 20
+    train=data/custom/train.txt
+    valid=data/custom/valid.txt
+    names=data/custom/classes.names
+    ```  
+    * data/custom/images & data/custom/labels are in the right directory and contain the required information. Labels should be in this syntax:
+    ```python
+    12 0.502 0.625 0.076 0.168
+    14 0.514 0.555 0.1 0.192
+    11 0.332 0.829 0.06 0.149
+    11 0.413 0.795 0.03 0.064
+    ```
+    * train.txt & valid.txt & classes.names are in the right directory and contain the correct information.
 
 ## Training
 Now we are ready to staring trainning. run:
