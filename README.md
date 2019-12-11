@@ -1,10 +1,10 @@
 # Hammer--Fairy--YOLOv3
 The real time object detection project by hammer &amp; fairy team
 
-## Requirements
+## Environment Requirements
 Python 3 (>= 3.7.0)
 
-## Preperations before running
+## Preperations
 1. We are using the PASCAL VOC datasets provided on mldsp server. But we need to move data into certain folders, and change labels into YOLO syntax.
 2. Move the images of your dataset to data/custom/images/ , by running:  
 ```python
@@ -30,6 +30,7 @@ python3 convert.py --datasets VOC --img_path data/custom/images/ --label /datase
     11 0.413 0.795 0.03 0.064
     ```
     * train.txt & valid.txt & classes.names are in the right directory and contain the correct information.
+5. For demo purposes, we also need to download the model we trained and put it in the folder "checkpoints": [Our Model](https://www.dropbox.com/s/4ystpsy9xwg0old/yolov3_ckpt_309.pth?dl=0)
 
 ## Training
 Now we are ready to staring trainning. run:
