@@ -30,7 +30,7 @@ python3 convert.py --datasets VOC --img_path data/custom/images/ --label /datase
     11 0.413 0.795 0.03 0.064
     ```
     * train.txt & valid.txt & classes.names are in the right directory and contain the correct information.
-5. [For demo purposes, we also need to download the model we trained and put it in the folder "checkpoints"](https://www.dropbox.com/s/4ystpsy9xwg0old/yolov3_ckpt_309.pth?dl=0)
+5. __[For demo purposes, we also need to download the model we trained and put it in the folder "checkpoints"](https://www.dropbox.com/s/4ystpsy9xwg0old/yolov3_ckpt_309.pth?dl=0)__
 
 ## Training
 Now we are ready to staring trainning. run:
