@@ -1,4 +1,0 @@
-classes= 20
-train=config/voc_train.txt
-valid=config/voc_test.txt
-names=config/voc.txt
